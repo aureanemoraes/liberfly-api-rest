@@ -34,6 +34,8 @@ services:
       - DB_DATABASE=liberflydb
       - DB_USERNAME=root
       - DB_PASSWORD=root
+    volumes:
+      - .:/app
     networks:
       - liberflynet
     depends_on:
