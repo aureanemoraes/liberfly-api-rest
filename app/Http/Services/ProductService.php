@@ -6,14 +6,14 @@ use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 
-class ProductService {
-    public function index(): ProductCollection
+class ProductService extends BaseService {
+    public function index(): array
     {
-        return new ProductCollection(Product::all());
+        return $this->success(new ProductCollection(Product::all()));
     }
 
-    public function show(Product $product): ProductResource
+    public function show(Product $product): array
     {
-        return new ProductResource($product);
+        return $this->success(new ProductResource($product));
     }
 }

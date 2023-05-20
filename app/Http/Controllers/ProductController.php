@@ -18,15 +18,19 @@ class ProductController extends Controller
 
     public function index(): JsonResponse
     {
-        return response()->success(
-            $this->productService->index()
-        );
+        $result = $this->productService->index();
+
+        if (!$result['success']) return response()->error($result['errors']);
+
+        return response()->success($result['data']);
     }
 
     public function show(Product $product): JsonResponse
     {
-        return response()->success(
-            $this->productService->show($product)
-        );
+        $result = $this->productService->show($product);
+
+        if (!$result['success']) return response()->error($result['errors']);
+
+        return response()->success($result['data']);
     }
 }
