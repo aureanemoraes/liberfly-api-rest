@@ -15,8 +15,15 @@ use App\Models\Product;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+use App\Http\Controllers\AuthController;
+
+Route::controller(AuthController::class)->group(function () {
+    Route::post('login', 'login')->name('auth.login');
+    Route::post('register', 'register')->name('auth.register');
+    Route::post('logout', 'logout')->name('auth.logout');
+    Route::post('refresh', 'refresh')->name('auth.refresh');
 });
 
-Route::resource('products', \App\Http\Controllers\ProductController::class);
+Route::resource('products', \App\Http\Controllers\ProductController::class)
+    ->middleware('auth:api');

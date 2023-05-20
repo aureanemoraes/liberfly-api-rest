@@ -3,11 +3,12 @@
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ProductControllerTest extends TestCase
+class AuthControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
@@ -15,7 +16,20 @@ class ProductControllerTest extends TestCase
      * A basic test example.
      */
 
-    public function test_index(): void
+    public function test_register(): void
+    {
+        $response = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->post(route('auth.register'), [
+            'name' => fake()->name,
+            'email' => fake()->unique()->safeEmail(),
+            'password' => Str::random('10')
+        ]);
+
+        $response->assertStatus(201);
+    }
+
+    public function test_login(): void
     {
         // registering user
         $email = fake()->unique()->safeEmail();
@@ -32,25 +46,15 @@ class ProductControllerTest extends TestCase
         $registerResponse->assertStatus(201);
 
         // logging user
-        $userResponse = $this->post(route('auth.login'), [
+        $response = $this->post(route('auth.login'), [
             'email' => $email,
             'password' => $password
         ]);
 
-        $userResponse->assertStatus(200);
-
-        [ 'data' => $data ] = $userResponse->json();
-
-        // testing index
-        $response = $this->withHeaders([
-            'Accept' => 'application/json',
-            'Authorization' => $data['authorization']['type'] . ' ' . $data['authorization']['token']
-        ])->get(route('products.index'));
-
         $response->assertStatus(200);
     }
 
-    public function test_show(): void
+    public function test_logout(): void
     {
         // registering user
         $email = fake()->unique()->safeEmail();
@@ -67,44 +71,48 @@ class ProductControllerTest extends TestCase
         $registerResponse->assertStatus(201);
 
         // logging user
-        $userResponse = $this->post(route('auth.login'), [
+        $response = $this->post(route('auth.login'), [
             'email' => $email,
             'password' => $password
         ]);
 
-        $userResponse->assertStatus(200);
+        $response->assertStatus(200);
 
-        [ 'data' => $data ] = $userResponse->json();
-
-        // testing show
-        $product = Product::factory()->create();
-
-        $response = $this->withHeaders([
-            'Accept' => 'application/json',
-            'Authorization' => $data['authorization']['type'] . ' ' . $data['authorization']['token']
-        ])->get(route('products.show', $product));
+        // logging out user
+        $response = $this->post(route('auth.logout'));
 
         $response->assertStatus(200);
     }
 
-
-    public function test_index_without_jwt_token(): void
+    public function test_refresh(): void
     {
-        $response = $this->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(route('products.index'));
+        // registering user
+        $email = fake()->unique()->safeEmail();
+        $password = Str::random('10');
 
-        $response->assertStatus(401);
+        $registerResponse = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->post(route('auth.register'), [
+            'name' => fake()->name,
+            'email' => $email,
+            'password' => $password
+        ]);
+
+
+        $registerResponse->assertStatus(201);
+
+        // logging user
+        $response = $this->post(route('auth.login'), [
+            'email' => $email,
+            'password' => $password
+        ]);
+
+        $response->assertStatus(200);
+
+        // refreshing token
+        $response = $this->post(route('auth.refresh'));
+
+        $response->assertStatus(200);
     }
 
-    public function test_show_without_jwt_token(): void
-    {
-        $product = Product::factory()->create();
-
-        $response = $this->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(route('products.show', $product));
-
-        $response->assertStatus(401);
-    }
 }
