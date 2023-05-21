@@ -11,7 +11,7 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "User Login",
+                "summary": "User Login - Get JWT token",
                 "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
                 "requestBody": {
                     "required": true,
@@ -183,7 +183,7 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "User Logout",
+                "summary": "User Logout - Revoke JWT token",
                 "operationId": "fe8f3429cd6979b3b4517e186505f9f9",
                 "parameters": [
                     {
@@ -231,7 +231,7 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "User refresh",
+                "summary": "User refresh - Refresh JWT token",
                 "operationId": "2c27d311a2876560fcb5a754b556cdc5",
                 "parameters": [
                     {
