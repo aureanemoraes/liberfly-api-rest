@@ -24,7 +24,7 @@ services:
     build: .
     # image: nanem/liberfly-api
     container_name: liberfly_laravel
-    command: bash -c "composer install && php artisan jwt:secret --force && php artisan l5-swagger:generate && php artisan migrate:fresh --seed && php artisan serve --host=0.0.0.0 --port=8000"
+    command: bash -c "composer install && php artisan jwt:secret --force && php artisan l5-swagger:generate && php artisan migrate:fresh --seed && php artisan serve --host=0.0.0.0 --port=8000 && cp .env.example .env"
     ports:
       - "8000:8000"
     environment:

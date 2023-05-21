@@ -5,6 +5,5 @@ RUN docker-php-ext-install pdo mbstring
 RUN docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-enable pdo_mysql
 WORKDIR /app
 COPY . /app
-RUN cp .env.example .env
 CMD php artisan serve --host=0.0.0.0 --port=8000
 EXPOSE 8000
