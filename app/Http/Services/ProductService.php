@@ -14,6 +14,9 @@ class ProductService extends BaseService {
 
     public function show(Product $product): array
     {
+        if (!isset($product))
+            return $this->error(['la']);
+
         return $this->success(new ProductResource($product));
     }
 }

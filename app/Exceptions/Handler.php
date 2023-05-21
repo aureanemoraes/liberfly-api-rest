@@ -3,6 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -25,6 +28,19 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        // ModelNotFoundException
+        $this->renderable(function (ValidationException $e, $request): JsonResponse {
+            if ($request->is('api/*')) {
+                return response()->error($e->errors(), 422, 'Unprocessable Content.');
+            }
+        });
+
+        $this->renderable(function (NotFoundHttpException $e, $request): JsonResponse {
+            if ($request->is('api/*')) {
+                return response()->error(array('No query result.'), 422, 'Not found.');
+            }
         });
     }
 }
