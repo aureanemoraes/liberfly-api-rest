@@ -24,7 +24,7 @@ class AuthController extends Controller
     /**
     * @OA\Post(
     *     path="/api/login",
-    *     summary="User Login",
+    *     summary="User Login - Get JWT token",
     *     tags={"Authentication"},
     *     @OA\RequestBody(
     *         required=true,
@@ -117,7 +117,7 @@ class AuthController extends Controller
     /**
     * @OA\Post(
     *     path="/api/logout",
-    *     summary="User Logout",
+    *     summary="User Logout - Revoke JWT token",
     *     tags={"Authentication"},
     *     security={{ "bearerAuth": {} }},
     *     @OA\Parameter(
@@ -152,7 +152,7 @@ class AuthController extends Controller
     /**
     * @OA\Post(
     *     path="/api/refresh",
-    *     summary="User refresh",
+    *     summary="User refresh - Refresh JWT token",
     *     tags={"Authentication"},
     *     security={{ "bearerAuth": {} }},
     *     @OA\Parameter(
